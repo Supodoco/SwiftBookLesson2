@@ -11,14 +11,14 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var buttonChangeColor: UIButton!
     @IBOutlet var viewsTraficLight: [UIView]!
-    let alpha = 0.30000001192092896
+    let alphaDefault = 0.3
         
     
     override func viewDidLoad() {
         super.viewDidLoad()
         buttonChangeColor.setTitle("START", for: .normal)
         for view in viewsTraficLight {
-            view.alpha = 0.3
+            view.alpha = alphaDefault
         }
     }
     override func viewDidLayoutSubviews() {
@@ -31,15 +31,16 @@ class ViewController: UIViewController {
 
     @IBAction func buttonChangeColorTapped(_ sender: UIButton) {
         sender.setTitle("NEXT", for: .normal)
-        if viewsTraficLight[0].alpha == alpha && viewsTraficLight[1].alpha == alpha {
-            viewsTraficLight[0].alpha = 1
-            viewsTraficLight[2].alpha = alpha
-        } else if viewsTraficLight[1].alpha == alpha {
-            viewsTraficLight[1].alpha = 1
-            viewsTraficLight[0].alpha = alpha
+        if viewsTraficLight.filter({ $0.alpha == 1 }).count == 0 {
+            viewsTraficLight.first?.alpha = 1
         } else {
-            viewsTraficLight[2].alpha = 1
-            viewsTraficLight[1].alpha = alpha
+            for (index, view) in viewsTraficLight.enumerated() {
+                if view.alpha == 1 {
+                    view.alpha = alphaDefault
+                    viewsTraficLight[index + (index == 2 ? -2 : 1)].alpha = 1
+                    break
+                }
+            }
         }
     }
     
